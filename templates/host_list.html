@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block content %}
+    {% for host in hosts %}
+        <article class="media content-section">
+            <div class="media-body">
+
+                    <a class="mr-2" href="#">{{ host.hostname }}</a>
+                    <small class="text-muted">{{ host.ip }}</small>
+                    <small class="text-muted">{{ host.state }}</small>
+ 
+            </div>
+        </article>
+    {% endfor %}
+{% endblock content %}

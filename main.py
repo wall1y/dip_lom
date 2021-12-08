@@ -1,19 +1,26 @@
-from flask import Flask
+from flask import Flask, render_template, url_for
 import os
+import socket
 app = Flask(__name__)
 
 
-def ping(hostname):
-  response = os.system("ping -c 1 " + hostname)
-  if response == 0:
-    return f"{hostname} is up!"
-  else:
-    return "{hostname} is down!"
+def ping(*hostnames):
+  hosts=[]
+  for ip in  hostnames:
+    response = os.system("ping -c 1 " + ip)
+    if response == 0:
+      hname=socket.gethostbyaddr(ip)
+      h= {'hostname':hname[0], 'ip':ip, 'state':"Up!"}
+    else:
+      h= {'hostname':hname[0], 'ip':ip, 'state':"Down!"}
+    hosts.append(h)
+  return hosts
 @app.route("/")
-@app.route("/home")
+@app.route("/host_list")
 def home():
-    a=ping("192.168.0.1")
-    return f"yay! {a}"
+    a=ping("192.168.0.1","192.168.0.106", "8.8.8.8", "1.1.1.1")
+    return render_template('host_list.html', hosts=a)
+
 @app.route("/about")
 def about():
     return "<h1>About Page</h1>"
