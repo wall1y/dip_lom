@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2> Application settings</h2>
+<article class="media content-section">
+    <div class="media-body">
+        <div class="article_metadata">
+            <h4 class="article_title">Synchronization settings</h4>
+        </div>
+        <form method="POST" , action="">
+            <div class="form-group">
+                <label for="sync_period">Sync period in minutes</label>
+                <input type="text" class="form-control" id="sync_period">
+                <label for="sync_timeout">Sync timeout in minutes</label>
+                <input type="text" class="form-control" id="syn_timeout">
+            </div>
+            <div class="article_metadata">
+                <h4 class="article_title">Execution settings</h4>
+                <div class="form-group">
+                    <label for="run_user">Run tasks as user (default is root)</label>
+                    <input type="text" class="form-control" id="sync_period">
+                    <label for="conn_timeout">Connect timeout in seconds</label>
+                    <input type="text" class="form-control" id="syn_timeout">
+                </div>
+            </div>
+        </form>
+    </div>
+</article>
+{% endblock content %}

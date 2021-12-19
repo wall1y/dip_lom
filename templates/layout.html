@@ -27,7 +27,8 @@
           <div class="collapse navbar-collapse" id="navbarToggle">
             <div class="navbar-nav mr-auto">
               <a class="nav-item nav-link" href="/">Hosts</a>
-              <a class="nav-item nav-link" href="/about">Settings</a>
+              <a class="nav-item nav-link" href="{{ url_for('settings') }}">Settings</a>
+              <a class="nav-item nav-link" href="{{ url_for('hostadd') }}">Add host</a>
             </div>
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
@@ -40,6 +41,15 @@
     <main role="main" class="container">
       <div class="row">
         <div class="col-md-8">
+          {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              {% for category, message in messages %}
+              <div class="alert alert-{{ category }}">
+                {{ message }}
+              </div>
+              {% endfor %}
+            {% endif %}
+          {% endwith%}
           {% block content %}{% endblock %}
         </div>
         <div class="col-md-4">

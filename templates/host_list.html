@@ -1,12 +1,13 @@
 {% extends "layout.html" %}
 {% block content %}
+    <h2> Host List</h2>
     {% for host in hosts %}
         <article class="media content-section">
             <div class="media-body">
 
-                    <a class="mr-2" href="#">{{ host.hostname }}</a>
-                    <small class="text-muted">{{ host.ip }}</small>
-                    <small class="text-muted">{{ host.state }}</small>
+                Hostname: <a class="mr-2" href="{{ url_for('host_info', host_id=host.id) }}">{{ host.hostname }}</a>
+                ip: <small class="text-muted">{{ host.ip }}</small>
+                Status: <small class="text-muted">{{ host.state }}</small>
  
             </div>
         </article>

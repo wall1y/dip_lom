@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2> {{ host.hostname }} Info</h2>
+    <article class="media content-section">
+        <div class="media-body">
+            <div class="article_metadata">
+                <h2 class="article_title">{{ host.hostname }}</h2>
+            </div>
+            ip: <small class="text-muted">{{ host.ip }}</small>
+            os: <small class="text-muted">{{ host.os }}</small>
+            Status: <small class="text-muted">{{ host.state }}</small>
+            Last synced: <small class="text-muted">{{ host.last_sync }}</small>
+        </div>
+    </article>
+{% endblock content %}
