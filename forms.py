@@ -7,4 +7,5 @@ from wtforms.validators import DataRequired, Length, IPAddress
 class HostAddForm(FlaskForm):
     hostname = StringField('Hostname', validators=[DataRequired(), Length(min=3, max=50)])
     ip = StringField('IP-address', validators=[DataRequired(),IPAddress()])
+    os = StringField('OS', validators=[DataRequired(), Length(min=3, max=50)])
     submit = SubmitField('Add')
