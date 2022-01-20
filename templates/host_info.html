@@ -6,9 +6,9 @@
             <div class="article_metadata">
                 <h2 class="article_title">{{ host.hostname }}</h2>
             </div>
-            ip: <small class="text-muted">{{ host.ip }}</small>
+            ip: <small class="text-muted">{{ host.ip_address }}</small>
             os: <small class="text-muted">{{ host.os }}</small>
-            Status: <small class="text-muted">{{ host.state }}</small>
+            Status: <small class="text-muted">{{ host.last_sync_state }}</small>
             Last synced: <small class="text-muted">{{ host.last_sync }}</small>
         </div>
     </article>

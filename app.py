@@ -39,30 +39,9 @@ class Hosts(db.Model):
     def __repr__(self):
         return f"Hosts('{self.hostname}','{self.ip_address}','{self.os}')"
 
-# hosts = [
-#     {
-#         'id': 0,
-#         'hostname': 'server.domain.local',
-#         'ip': '10.0.0.2',
-#         'state': 'OK',
-#         'last_sync': '15.12.2021',
-#         'os': 'debian'
-#     },
-#     {
-#         'id': 1,
-#         'hostname': 'worstation.domain.local',
-#         'ip': '10.0.0.3',
-#         'state': 'UNKNOWN',
-#         'last_sync': '15.11.2021',
-#         'os': 'ubuntu'
-#     }
-# ]
-
-
 @app.route("/")
 @app.route("/host_list")
 def host_list():
-    #a=ping("192.168.0.11","192.168.0.102", "8.8.8.8", "1.1.1.1")
     list=Hosts.query.all()
     return render_template('host_list.html', hosts=list)
 
@@ -82,10 +61,11 @@ def hostadd():
       return redirect(url_for('host_list'))
     return render_template('hostadd.html',title='Add Host', form=form)
 
-# @app.route("/host_info/<int:host_id>")
-# def host_info(host_id):
-#     host = hosts[host_id]
-#     return render_template('host_info.html', title='Host Info' , host=host)
+@app.route("/host_info/<int:host_id>")
+def host_info(host_id):
+    host = Hosts.query.get_or_404(host_id)
+    print(host)
+    return render_template('host_info.html', title='Host Info' , host=host)
 
 if __name__ == '__main__':
     app.run(debug=True)
