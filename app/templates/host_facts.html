@@ -1,8 +1,9 @@
-{% extends "layout.html" %}
+{% extends "host_info.html" %}
 {% block content %}
+{% if current_user.is_authenticated %}
 <h2> {{ host.hostname }} Info</h2>
     <article class="media content-section">
-        <div class="media-body">
+        <div class="media-body text-wrap col-lg-12" >
             <div class="article_metadata">
                 <h2 class="article_title">{{ host.hostname }}</h2>
             </div>
@@ -10,6 +11,13 @@
             os: <small class="text-muted">{{ host.os }}</small>
             Status: <small class="text-muted">{{ host.last_sync_state }}</small>
             Last synced: <small class="text-muted">{{ host.last_sync }}</small>
+            {% for item in facts %}
+                <p class="article-content text-wrap">{{ item }}</p>
+                <p class="article-content text-wrap"></p>{{ facts[item] }}</p>
+            {% endfor %}
+
         </div>
+        
     </article>
+{% endif %}
 {% endblock content %}

@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
+{% if current_user.is_authenticated %}
     <h2> Host List</h2>
     {% for host in hosts %}
         <article class="media content-section">
@@ -12,4 +13,5 @@
             </div>
         </article>
     {% endfor %}
+{% endif %}
 {% endblock content %}

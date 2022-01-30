@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
+{% if current_user.is_authenticated %}
 <h2> Application settings</h2>
 <article class="media content-section">
     <div class="media-body">
@@ -25,4 +26,5 @@
         </form>
     </div>
 </article>
+{% endif %}
 {% endblock content %}
