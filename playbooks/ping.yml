@@ -1,6 +1,1 @@
----
-- name: Knock-knock-knocking on host interface
-  hosts: all
-  tasks:
-    - name: ping-a-ling-a-ding
-      ansible.builtin.ping:
+1233

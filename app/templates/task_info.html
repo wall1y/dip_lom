@@ -1,0 +1,22 @@
+{% extends "host_info.html" %}
+{% block content %}
+{% if current_user.is_authenticated %}
+<h2> {{ host.hostname }} Info</h2>
+    <article class="media content-section">
+        <div class="media-body text-wrap col-lg-12" >
+            <div class="article_metadata">
+                <h2 class="article_title">{{ host.hostname }}</h2>
+            </div>
+            {% if task is mapping %}
+                {{task}}
+            {% else %}
+                {% set list1 = task.split('\n') %}
+                {% for item in list1 %}
+                    <p>{{ item }}</p>
+                {% endfor %} 
+            {% endif %}
+           
+        </div>
+    </article>
+{% endif %}
+{% endblock content %}

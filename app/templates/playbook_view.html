@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block content %}
+{% if current_user.is_authenticated %}
+<h2> Application settings</h2>
+<article class="media content-section">
+    <div class="media-body">
+        <div class="article_metadata">
+            <h2 class="article_title">{{ filename }}</h2>
+            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('playbook_edit', file = filedir + '/', filename=filename) }}">Update</a>
+        </div>
+        {{ playbook }}
+    </div>
+</article>
+{% endif %}
+{% endblock content %}

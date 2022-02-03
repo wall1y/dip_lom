@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
-from wtforms.validators import DataRequired, Length, IPAddress, ValidationError, EqualTo, Email
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField
+from wtforms.validators import DataRequired, Length, IPAddress, ValidationError, EqualTo, Email, Regexp
 from app.dbase import User, Hosts
 
 class HostAddForm(FlaskForm):
@@ -29,10 +29,18 @@ class UserAddForm(FlaskForm):
         if user:
             raise ValidationError('That email is taken. Please choose a different one.')
 
-
 class LoginForm(FlaskForm):
     email = StringField('Email',
                         validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     remember = BooleanField('Remember Me')
     submit = SubmitField('Login')
+
+class EditorForm(FlaskForm):
+    filename = StringField('Content', validators=[DataRequired(), Regexp(regex='^([a-zA-Z0-9\s\._-]+)$')])
+    content = TextAreaField('Content', validators=[DataRequired()])
+    submit = SubmitField('Save')
+
+class NewFolderForm(FlaskForm):
+    dirname = StringField('Content', validators=[DataRequired(), Regexp(regex='^([a-zA-Z0-9\s\._-]+)$')], render_kw={"placeholder": "Create new directory?"})
+    submit = SubmitField('Create')

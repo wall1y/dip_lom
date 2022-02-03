@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+{% block content %}
+{% if current_user.is_authenticated %}
+<script src="https://pagecdn.io/lib/ace/1.4.13/ace.js" type="text/javascript" charset="utf-8"></script>
+<h2> Playbook editor settings</h2>
+<div class="content-section">
+<form onsubmit="alert('submit!')" method="POST" action="" onsubmit="">
+    {{ form.hidden_tag() }}
+    <fieldset class="form-group">
+        <legend class="border-bottom mb-4">{{ legend }}</legend>
+        <div class="form-group">
+            <div id="editor" class="col-lg-12" style="height: 300px" name="content">{{ file_content }}
+            </div>
+        </div>
+</fieldset>
+    <div class="form-group">
+        {{ form.submit(class="btn btn-outline-info") }}
+    </div>
+</form>
+</div>
+<div class="border-top pt-3">
+    <small class="text-muted">
+        Add your new cool host in this form
+    </small>
+</div>
+    <script>
+        var editor = ace.edit("editor");
+        editor.setTheme("ace/theme/monokai");
+        editor.session.setMode("ace/mode/yaml");
+        document.getElementById('submit').onclick = function(){
+            var xhr = new XMLHttpRequest();
+
+            var body = editor.getValue();
+
+            xhr.open("POST", '/playbooks/view', true);
+            xhr.send(body);
+            alert(body);
+        }
+    </script>
+{% endif %}
+{% endblock content %}

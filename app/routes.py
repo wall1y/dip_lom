@@ -1,10 +1,13 @@
+from hashlib import new
 from flask import render_template, url_for, flash, redirect, request, abort
 from app import app, db, bcrypt
-from app.forms import HostAddForm, UserAddForm, LoginForm
+from app.forms import EditorForm, HostAddForm, UserAddForm, LoginForm, NewFolderForm
 from app.dbase import *
 from flask_login import login_user, current_user, logout_user, login_required
 from app.worker import get_facts, run_playbook
-import json
+import os, subprocess, shutil
+
+allow_root_path=f"{os.getcwd()}/playbooks"
 
 
 @app.route("/")
@@ -117,6 +120,86 @@ def delete_host(host_id):
 def run_task(host_id):
     host = Hosts.query.filter_by(id=host_id).first()
     task=run_playbook(host.ip_address, "ping.yml")
-    print(task)
-    return task
-    #return render_template('host_facts.html', title='Host facts' , host=host, facts=facts)
+
+
+    return render_template('task_info.html', title='Task run info' , host=host, task=task['stat'])
+
+@app.route("/playbooks")
+@login_required
+def playbooks():
+    form=NewFolderForm()
+    target_path=request.args.get('path')
+
+    if not target_path or allow_root_path not in target_path:
+        current_working_directory=allow_root_path
+    else:       
+        current_working_directory=request.args.get('path')
+        print(current_working_directory)
+    file_list=subprocess.check_output(f'ls {current_working_directory}', shell=True).decode('utf-8').split('\n')
+    return render_template('playbooks.html', legend='Playbooks list', allow_root_path=allow_root_path, current_working_directory=current_working_directory,file_list=file_list, form=form)
+
+@app.route('/playbooks/cd')
+@login_required
+def cd():
+    os.chdir(request.args.get('path'))
+    print(request.args.get('path'))
+    return redirect(url_for('playbooks', path=request.args.get('path')))
+
+
+@app.route('/playbooks/new_dir', methods=['GET', 'POST'])
+@login_required
+def new_dir():
+    file_dir=request.args.get('path')
+    form = NewFolderForm()
+    print(file_dir)
+    print(form.dirname.data)
+    if form.validate_on_submit():
+        new_dirname=file_dir+form.dirname.data
+        print(new_dirname)
+        os.mkdir(new_dirname)
+    return redirect(url_for('playbooks'))
+
+@app.route('/playbooks/rm')
+@login_required
+def rm():
+    shutil.rmtree(request.args.get('path'))
+    return redirect('/playbooks')
+    
+@app.route('/playbooks/view')
+@login_required
+def view():
+    filename=request.args.get('filename')
+    filedir=request.args.get('path')
+    filepath=filedir+filename
+    with open(filepath, 'r') as f:
+        file_content=f.read()
+    return render_template('playbook_view.html', title='Editor', playbook=file_content, filename=filename, filedir=filedir)
+
+@app.route('/playbooks/edit', methods=['GET', 'POST'])
+@login_required
+def playbook_edit():
+    filename=request.args.get('filename')
+    file_dir=request.args.get('file')
+    full_path_to_file=request.args.get('file')+filename
+
+    with open(full_path_to_file, 'r+') as f:
+        file_content=f.read()
+    form = EditorForm()
+    if form.validate_on_submit():
+        if file_content != form.content.data or filename != form.filename.data:
+            if filename != form.filename.data and file_content == form.content.data:
+                new_name=file_dir+form.filename.data
+                os.rename(full_path_to_file,new_name)
+            if file_content != form.content.data and filename == form.filename.data:
+                with open(full_path_to_file, 'w') as f:
+                    f.write(form.content.data)
+            if file_content != form.content.data and filename != form.filename.data:
+                new_name=file_dir+form.filename.data
+                os.rename(full_path_to_file,new_name)
+                with open(new_name, 'w') as f:
+                    f.write(form.content.data)
+        return redirect(url_for('playbooks'))
+    elif request.method == 'GET':
+        form.filename.data = filename
+        form.content.data = file_content
+    return render_template('editor.html', title='Editor', form=form, file_dir=file_dir, legend='Editor')
