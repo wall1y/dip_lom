@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block content %}
+{% if current_user.is_authenticated %}
+    <div class="content-section">
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">{{ legend }}</legend>
+                <div class="form-group">
+                    {{ form.group_name.label(class="form-control-label") }}
+                    {{ form.group_name(class="form-control form-control-lg") }}
+                </div>
+                <div class="form-group">
+                    {{ form.playbooks.label(class="form-control-label") }}
+                    {{ form.playbooks(class="form-control form-control-lg") }}
+                </div>
+            </fieldset>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-sm btn-success") }}
+                <a class="btn btn-primary btn-sm mt-1 mb-1" href="{{ url_for('group_list') }}">Отменить</a>
+            </div>
+        </form>
+    </div>
+{% endif %}
+{% endblock content %}

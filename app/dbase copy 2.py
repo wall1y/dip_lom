@@ -19,24 +19,6 @@ host_playbooks = db.Table(
     db.Column("host_id", db.Integer, db.ForeignKey("hosts.id")),
 )
 
-class Hostgroup(db.Model):
-    id=db.Column(db.Integer, primary_key=True)
-    group_name=db.Column(db.String(20), unique=True, nullable=False)
-    members=db.relationship('Hosts', backref='hostgroup', lazy=True)
-    gpbooks=db.relationship("Playbooks", secondary=group_playbooks, back_populates='groups')
-    
-    def __repr__(self):
-        return f"Hostgroup('{self.group_name}', '{self.members}')"
-
-class Playbooks(db.Model):
-    id=db.Column(db.Integer, primary_key=True)
-    pb_name=db.Column(db.String(20), unique=True, nullable=False)
-    groups=db.relationship("Hostgroup", secondary=group_playbooks, back_populates='gpbooks')
-    hosts=db.relationship("Hosts", secondary=host_playbooks, back_populates='hpbooks')
-
-    def __repr__(self):
-        return f"Hostgroup('{self.pb_name}')"
-
 class User(db.Model, UserMixin):
     id=db.Column(db.Integer, primary_key=True)
     username=db.Column(db.String(20), unique=True, nullable=False)
@@ -47,6 +29,23 @@ class User(db.Model, UserMixin):
     def __repr__(self):
         return f"User('{self.username}','{self.email}','{self.isadmin}')"
 
+class Hostgroup(db.Model):
+    id=db.Column(db.Integer, primary_key=True)
+    group_name=db.Column(db.String(20), unique=True, nullable=False)
+    members=db.relationship('Hosts', backref='hostgroup', lazy=True)
+    playbooks=db.relationship('Playbooks', secondary=group_playbooks, backref='hostgroups')
+    
+    def __repr__(self):
+        return f"Hostgroup('{self.group_name}', '{self.members}')"
+
+class Playbooks(db.Model):
+    id=db.Column(db.Integer, primary_key=True)
+    pb_name=db.Column(db.String(20), unique=True, nullable=False)
+    hosts=db.relationship('Hosts', secondary=host_playbooks, back_populates='playbooks')
+    hotsgroups=db.relationship('Hostgroup', secondary=group_playbooks, back_populates='playbooks')
+
+    def __repr__(self):
+        return f"Hostgroup('{self.pb_name}')"
 
 class Hosts(db.Model):
     id=db.Column(db.Integer, primary_key=True)
@@ -56,6 +55,7 @@ class Hosts(db.Model):
     last_sync=db.Column(db.DateTime)
     os=db.Column(db.String(100))
     group_id=db.Column(db.Integer, db.ForeignKey('hostgroup.id'), nullable=False)
-    hpbooks=db.relationship("Playbooks", secondary=host_playbooks, back_populates='hosts')
+    playbooks=db.relationship('Playbooks', secondary=host_playbooks, back_populates='hosts')
+    
     def __repr__(self):
         return f"Hosts('{self.hostname}','{self.ip_address}','{self.os}', {self.group_id})"

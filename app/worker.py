@@ -30,7 +30,7 @@ def run_playbook(host_ip, task_name):
         playbook=task_name,
         inventory=f'{host_ip}',
         host_pattern=host_ip,
-        extravars={'ansible_user':'batman'},
+        extravars={'ansible_user':'batman', 'ansible_sudo_pass':'qwe1'},
         rotate_artifacts=1,
         )
     task_stdout=''

@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% block content %}
+{% if current_user.is_authenticated %}
+    <h2> Group List</h2>
+    {% for group in groups %}
+        <article class="media content-section">
+            <div class="media-body">
+                <a class="mr-2" href="{{ url_for('group_info', group_id=group.id) }}">{{ group.group_name }}</a>
+            </div>
+        </article>
+    {% endfor %}
+{% endif %}
+{% endblock content %}

@@ -5,15 +5,16 @@
     <article class="media content-section">
         <div class="media-body text-wrap col-lg-12" >
             <div class="article_metadata">
-                <h2 class="article_title">{{ host.hostname }}</h2>
+                <h2 class="article_title">{{ task_name }} запущена на {{host.hostname}}</h2>
             </div>
             {% if task is mapping %}
-                {{task}}
+            {{task}}
+ 
             {% else %}
-                {% set list1 = task.split('\n') %}
-                {% for item in list1 %}
-                    <p>{{ item }}</p>
-                {% endfor %} 
+            {% set list1 = task.split('\n') %}
+            {% for item in list1 %}
+                <p>{{ item }}</p>
+            {% endfor %}
             {% endif %}
            
         </div>

@@ -1,21 +1,22 @@
 {% extends "layout.html" %}
 {% block content %}
 {% if current_user.is_authenticated %}
-<h2> Информация об узле</h2>
+<h2> Группа {{ group.group_name }} </h2>
     <article class="media content-section">
         <div class="media-body">
             <div class="article_metadata">
-                <h2 class="article_title">{{ host.hostname }}</h2>
-                <a class="btn btn-primary btn-sm mt-1 mb-1" href="{{ url_for('update_host', host_id=host.id) }}">Редактировать</a>
+                <h2 class="article_title">{{ group.group_name }}</h2>
+                <a class="btn btn-primary btn-sm mt-1 mb-1" href="{{ url_for('update_group', group_id=group.id) }}">Изменить</a>
                 <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Удалить</button>
             </div>
-            <small class="text-muted">Группа:</small>{{  host.hostgroup.group_name }}<br>
-            <small class="text-muted">ip-адрес:</small>{{ host.ip_address }}<br>
-            <small class="text-muted">ОС:</small>{{ host.os }}</small><br>
-            <small class="text-muted">Статус:</small>{{ host.last_sync_state }}<br>
-            <small class="text-muted">Последняя синхронизация:</small>{{ host.last_sync }}<br>
+            Члены группы: 
+            {% for member in group.members %}
+            <ul class="list-group">
+              <li class="list-group-item"><a class="mr-2" href="{{ url_for('host_info', host_id=member.id) }}">{{ member.hostname }}</a></li>
+            </ul>
+            {% endfor %}
             Плейбуки: 
-            {% for member in host.hpbooks %}
+            {% for member in group.gpbooks %}
             <ul class="list-group">
               <li class="list-group-item">{{ member.pb_name }}</a></li>
             </ul>
@@ -27,14 +28,14 @@
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="deleteModalLabel">Удалить узел?</h5>
+              <h5 class="modal-title" id="deleteModalLabel">Delete group?</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-              <form action="{{ url_for('delete_host', host_id=host.id) }}" method="POST">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <form action="{{ url_for('delete_group', group_id=group.id) }}" method="POST">
                 <input class="btn btn-danger" type="submit" value="Delete">
               </form>
             </div>

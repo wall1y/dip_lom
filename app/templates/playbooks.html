@@ -3,53 +3,26 @@
 {% if current_user.is_authenticated %}
 <div class="content-section">
   <legend class="border-bottom mb-4">{{ legend }}</legend>
-
-    <form class="form-inline" action="{{ url_for('new_dir', path = current_working_directory + '/') }}" method="POST">
-        {{ form.hidden_tag() }}
-
-        <fieldset class="form-group">
-          <div class="form-group">
-              {% if form.dirname.errors %}
-                  {{ form.dirname(class="form-control form-control-sm is-invalid") }}
-                  <div class="invalid-feedback">
-                      {% for error in form.dirname.errors %}
-                          <span>{{ error }}</span>
-                      {% endfor %}
-                  </div>
-              {% else %}
-                  {{ form.dirname(class="form-control form-control-sm") }}
-              {% endif %}
-          </div>
-        </fieldset>
-        <div class="form-group">
-          {{ form.submit(class="btn btn-sm btn-outline-info") }}
-        </div>
+    <form class="form-inline" action="" method="POST">
+        <a class="btn btn-primary btn-sm mt-1 mb-1" href="{{ url_for('pb_add', path = current_working_directory + '/') }}">New file</a>
     </form>
-    <ul>
+    <ul class="list-group">
         {% if current_working_directory == allow_root_path %}
-            <li><a href="{{ url_for('cd', path = allow_root_path) }}">..</a></li>
+            <li class="list-group-item"><a href="{{ url_for('cd', path = allow_root_path) }}">..</a></li>
         {% else %}
-            <li><a href="{{ url_for('cd', path = '..') }}">..</a></li>
+            <li class="list-group-item"><a href="{{ url_for('cd', path = '..') }}">..</a></li>
         {% endif %}
         {% for item in file_list[0: -1] %}
           {% if '.' not in item%}
-            <li>
-              <strong>
+            <li class="list-group-item">
                 <a href="{{ url_for('cd', path = current_working_directory + '/' + item) }}">{{item}}</a>
-              </strong>
-              <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('rm', path = current_working_directory + '/', filename=item) }}">DELETE</a>
-              <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('view', path = current_working_directory + '/', filename=item) }}">view</a>
             </li>
-          {% elif '.txt' in item or '.py' in item or '.json' in item or '.yml' in item %}
-            <li>
-              <strong>
-                <a href="{{ url_for('playbook_edit', file = current_working_directory + '/', filename=item) }}">{{item}}</a>
-              </strong>
-              <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('rm', path = current_working_directory + '/', filename=item) }}">DELETE</a>
-              <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('view', path = current_working_directory + '/', filename=item) }}">view</a>
+          {% elif '.txt' in item or '.py' in item or '.json' in item or '.yml' in item or '.yaml' in item %}
+            <li class="list-group-item">
+                <a href="{{ url_for('view', path = current_working_directory + '/', filename=item) }}">{{item}}</a>
             </li>
           {% else %}
-            <li>{{item}}</li>
+            <li class="list-group-item">{{item}}</li>
           {% endif %}
         {% endfor %}
       </ul>

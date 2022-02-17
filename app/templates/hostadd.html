@@ -28,17 +28,21 @@
                     {{ form.os.label(class="form-control-label") }}
                     {{ form.os(class="form-control form-control-lg") }}
                 </div>
-
+                <div class="form-group">
+                    {{ form.group.label(class="form-control-label") }}
+                    {{ form.group(class="form-control form-control-lg") }}
+                </div>
+                <div class="form-group">
+                    {{ form.playbooks.label(class="form-control-label") }}
+                    {{ form.playbooks(class="form-control form-control-lg") }}
+                </div>
             </fieldset>
             <div class="form-group">
-                {{ form.submit(class="btn btn-outline-info") }}
+                {{ form.submit(class="btn btn-sm btn-success") }}
+                <a class="btn btn-primary btn-sm mt-1 mb-1" href="{{ url_for('host_list') }}">Отменить</a>
             </div>
         </form>
     </div>
-    <div class="border-top pt-3">
-        <small class="text-muted">
-            Add your new cool host in this form
-        </small>
-    </div>
+
 {% endif %}
 {% endblock content %}
